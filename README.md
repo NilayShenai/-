@@ -1,14 +1,14 @@
 IDFC about the name, its fucking given by [epicguest97](https://github.com/Epicguest97).
-# CHOOT
+# *****
 
-![CHOOT viewer screenshot](image.png)
+![***** viewer screenshot](image.png)
 
-This repo is a full reference implementation of CHOOT, an experimental continuous image format based on anisotropic 2D Gaussian splat atoms. There is no pixel grid stored in the file. Decoders evaluate the field at any resolution.
+This repo is a full reference implementation of *****, an experimental continuous image format based on anisotropic 2D Gaussian splat atoms. There is no pixel grid stored in the file. Decoders evaluate the field at any resolution.
 
 I wrote this in a plain, practical way. It is deterministic and not ML based. It does what it says, no extra stuff.
 
-## Why the name is CHOOT
-I was not able to come up with a name when [epicguest97](https://github.com/Epicguest97) said choot. So that became the placeholder name and it stuck.
+## Why the name is *****
+I was not able to come up with a name when [epicguest97](https://github.com/Epicguest97) said *****. So that became the placeholder name and it stuck.
 
 ## What this format is, in real terms
 This format stores a list of splats. Each splat is a 2D Gaussian with color. There is no pixel grid. When you render, you pick an output size, then evaluate the field at every pixel. That means:
@@ -20,13 +20,13 @@ If you want the exact byte layout, use [SPEC.md](SPEC.md). That is the source of
 
 ## Repo map
 - Spec and format details: [SPEC.md](SPEC.md)
-- Core library (file IO, f16, color conversion): [src/choot.h](src/choot.h) and [src/choot.c](src/choot.c)
-- CPU renderer (reference rasterizer): [src/choot_render.h](src/choot_render.h) and [src/choot_render.c](src/choot_render.c)
-- PNG to CHOOT encoder (Windows WIC): [tools/png2choot.c](tools/png2choot.c)
-- CHOOT to PPM raster tool: [tools/choot_raster.c](tools/choot_raster.c)
-- Tests: [tests/choot_tests.c](tests/choot_tests.c)
+- Core library (file IO, f16, color conversion): [src/*****.h](src/*****.h) and [src/*****.c](src/*****.c)
+- CPU renderer (reference rasterizer): [src/*****_render.h](src/*****_render.h) and [src/*****_render.c](src/*****_render.c)
+- PNG to ***** encoder (Windows WIC): [tools/png2*****.c](tools/png2*****.c)
+- ***** to PPM raster tool: [tools/*****_raster.c](tools/*****_raster.c)
+- Tests: [tests/*****_tests.c](tests/*****_tests.c)
 - Win32 + OpenGL viewer: [viewer/viewer.c](viewer/viewer.c)
-- Python viewer (uses choot_raster.exe): [viewer/choot_viewer.py](viewer/choot_viewer.py)
+- Python viewer (uses *****_raster.exe): [viewer/*****_viewer.py](viewer/*****_viewer.py)
 
 ## File format details
 ### Header
@@ -88,8 +88,8 @@ $$
 
 If you are implementing another decoder, use the same math to avoid color drift.
 
-## Encoder pipeline (png2choot)
-The encoder in [tools/png2choot.c](tools/png2choot.c) is multi-stage. The short version:
+## Encoder pipeline (png2*****)
+The encoder in [tools/png2*****.c](tools/png2*****.c) is multi-stage. The short version:
 1. Load PNG using WIC (Windows only).
 2. Build a 5D feature for each pixel: (x, y, r, g, b) with a spatial weight.
 3. k-means++ seeding, then Lloyd iterations to get clusters.
@@ -98,10 +98,10 @@ The encoder in [tools/png2choot.c](tools/png2choot.c) is multi-stage. The short 
 6. Error-driven splitting to add detail where it matters.
 7. Final soft refit at full resolution.
 
-Important detail: color is stored in YCoCg, and the encoder uses linear RGB for all math. That keeps the math consistent with the renderer in [src/choot_render.c](src/choot_render.c).
+Important detail: color is stored in YCoCg, and the encoder uses linear RGB for all math. That keeps the math consistent with the renderer in [src/*****_render.c](src/*****_render.c).
 
 ## Renderer details
-The renderer in [src/choot_render.c](src/choot_render.c) is a direct CPU reference. It evaluates every atom at every pixel, which is expensive but simple and correct. It also has OpenMP parallel loops for speed where possible.
+The renderer in [src/*****_render.c](src/*****_render.c) is a direct CPU reference. It evaluates every atom at every pixel, which is expensive but simple and correct. It also has OpenMP parallel loops for speed where possible.
 
 Complexity is roughly:
 
@@ -112,23 +112,23 @@ $$
 That is the reason large outputs get slow. This is a reference implementation, not a GPU splat renderer.
 
 ## Build (Windows, MSVC)
-From the repo root, run build.bat. It builds png2choot.exe, choot_raster.exe, and choot_tests.exe.
+From the repo root, run build.bat. It builds png2*****.exe, *****_raster.exe, and *****_tests.exe.
 
 Manual compile commands:
-- Build choot_raster.exe with cl /O2 /W4 /I src tools\choot_raster.c src\choot.c src\choot_render.c
-- Build png2choot.exe with cl /O2 /W4 /I src tools\png2choot.c src\choot.c src\choot_render.c src\wic_png.c /link windowscodecs.lib ole32.lib
+- Build *****_raster.exe with cl /O2 /W4 /I src tools\*****_raster.c src\*****.c src\*****_render.c
+- Build png2*****.exe with cl /O2 /W4 /I src tools\png2*****.c src\*****.c src\*****_render.c src\wic_png.c /link windowscodecs.lib ole32.lib
 
 The Windows PNG path uses WIC, so no extra image libraries are required on Windows.
 
 ## Tools and how to use them
-### png2choot.exe
-Converts PNG to CHOOT. Default settings are balanced for quality and speed.
+### png2*****.exe
+Converts PNG to *****. Default settings are balanced for quality and speed.
 
 Usage:
-- png2choot input.png output.choot
-- png2choot input.png output.choot hq
-- png2choot input.png output.choot fast
-- png2choot input.png output.choot atoms=10000 max_atoms=40000 sharp=1.6 sample=1
+- png2***** input.png output.*****
+- png2***** input.png output.***** hq
+- png2***** input.png output.***** fast
+- png2***** input.png output.***** atoms=10000 max_atoms=40000 sharp=1.6 sample=1
 
 Encoder parameters:
 - atoms (default 5000): initial k-means clusters
@@ -141,24 +141,24 @@ Encoder parameters:
 - sample (default 2): pixel sampling stride during refinement (1 = full)
 - fast / hq: presets
 
-### choot_raster.exe
-Rasterizes a .choot to PPM at a chosen resolution.
+### *****_raster.exe
+Rasterizes a .***** to PPM at a chosen resolution.
 
 Usage:
-- choot_raster input.choot output.ppm 1024 1024
-- choot_raster input.choot output.ppm 1024 1024 --p3
+- *****_raster input.***** output.ppm 1024 1024
+- *****_raster input.***** output.ppm 1024 1024 --p3
 
 The --p3 flag writes ASCII PPM for basic web viewers.
 
 ## Viewer options
 Prebuilt Windows viewer:
-- https://github.com/NilayShenai/choot/releases/download/CHOOT/choot_viewer.exe
+- https://github.com/NilayShenai/*****/releases/download/*****/*****_viewer.exe
 
 ### C viewer (Win32 + OpenGL + ImGui)
 Source is in [viewer/viewer.c](viewer/viewer.c). Build with viewer/build.bat after running viewer/setup.ps1 (that script downloads ImGui). This viewer renders in the background and keeps UI responsive.
 
 ## Tests
-Run choot_tests.exe. Tests cover:
+Run *****_tests.exe. Tests cover:
 - file IO validation
 - f16 conversions
 - YCoCg round-trip
